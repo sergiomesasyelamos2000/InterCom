@@ -19,13 +19,14 @@ class Threshold(Temporal_Overlapped_DWT):
         for i in range(len(self.bandas)):
             self.frecuencias.append('0')
         
-        # Declaramos la Cuantización
+        # Declaramos el cuantization step
         self.cuantizacion = []
         for i in range(len(self.bandas)):
             self.cuantizacion.append('0')
         
         # Ancho de banda de la señal de audio
         self.frecuencia = 22050
+        # Comprobamos si el número de niveles es 0
         if(self.dwt_levels == 0):
             self.frecuencias[0] = self.frecuencias
         else:    
@@ -42,6 +43,7 @@ class Threshold(Temporal_Overlapped_DWT):
                 else:
                     self.frecuencias[i] = self.frecuencia/2 
                 self.frecuencia = self.frecuencia/2
+            # Se calcula el cuantization step
             self.cuantizacion[i] = abs(int(3.64*(self.frecuencias[i]/1000)**(-0.8)-6.5*math.exp((-0.6)*(self.frecuencias[i]/1000-3.3)**2)+ 10**(-3)*(self.frecuencias[i]/1000)**4))
 
     def analyze(self,chunk):  
@@ -53,6 +55,8 @@ class Threshold(Temporal_Overlapped_DWT):
         return super().synthesize(chunk_DWT)
 
     def quantize(self, chunk):
+        
+        # Para cada banda aplicamos el quantize
         for i in range (len(self.subband)):
            chunk[0: self.subband[i]] = (chunk[0: self.subband[i]] / self.cuantizacion[i]).astype(np.int32)
         return chunk
