@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # PYTHON_ARGCOMPLETE_OK
 
+import numpy as np
+import pywt
 import logging
 import math
 import minimal
@@ -20,9 +22,9 @@ class Threshold(Temporal_Overlapped_DWT):
             self.frecuencias.append('0')
         
         # Cuantización
-        self.cuant = []
+        self.cuantizacion = []
         for i in range(len(self.bandas)):
-            self.cuant.append('0')
+            self.cuantizacion.append('0')
         
         # Ancho de banda de la señal de audio
         self.frecuencia = 22050
@@ -42,7 +44,7 @@ class Threshold(Temporal_Overlapped_DWT):
                 else:
                     self.frecuencias[i] = self.frecuencia/2 
                 self.frecuencia = self.frecuencia/2
-            self.cuant[i] = abs(int(3.64*(self.frecuencias[i]/1000)**(-0.8)-6.5*math.exp((-0.6)*(self.frecuencias[i]/1000-3.3)**2)+ 10**(-3)*(self.frecuencias[i]/1000)**4))
+            self.cuantizacion[i] = abs(int(3.64*(self.frecuencias[i]/1000)**(-0.8)-6.5*math.exp((-0.6)*(self.frecuencias[i]/1000-3.3)**2)+ 10**(-3)*(self.frecuencias[i]/1000)**4))
 
     def analyze(self,chunk):   
         return super().analyze(chunk)
@@ -54,13 +56,13 @@ class Threshold(Temporal_Overlapped_DWT):
     def quantize(self, chunk):
          
         for i in range (len(self.subband)):
-           chunk[0: self.subband[i]] = (chunk[0: self.subband[i]] / self.cuant[i]).astype(np.int32)
+           chunk[0: self.subband[i]] = (chunk[0: self.subband[i]] / self.cuantizacion[i]).astype(np.int32)
         
         return chunk
     
     def dequantize(self, quantized_chunk):
         for i in range (len(self.subband)):
-           quantized_chunk[0: self.subband[i]] = quantized_chunk[0: self.subband[i]] * self.cuant[i]
+           quantized_chunk[0: self.subband[i]] = quantized_chunk[0: self.subband[i]] * self.cuantizacion[i]
         return quantized_chunk
         
     
