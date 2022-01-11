@@ -2,12 +2,10 @@
 # PYTHON_ARGCOMPLETE_OK
 
 import numpy as np
-import pywt
 import logging
 import math
 import minimal
 from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT
-from stereo_MST_coding_32 import Stereo_MST_Coding_32 as stereo32
 from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT__verbose as temp_DWT__verbose
 
 
