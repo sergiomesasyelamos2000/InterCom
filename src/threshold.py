@@ -44,11 +44,9 @@ class Threshold(Temporal_Overlapped_DWT):
                 self.frecuencia = self.frecuencia/2
             self.cuantizacion[i] = abs(int(3.64*(self.frecuencias[i]/1000)**(-0.8)-6.5*math.exp((-0.6)*(self.frecuencias[i]/1000-3.3)**2)+ 10**(-3)*(self.frecuencias[i]/1000)**4))
 
-    def analyze(self,chunk):   
-
+    def analyze(self,chunk):  
         chunk_DWT = super().analyze(chunk)
         return self.quantize(self,chunk_DWT)
-
 
     def synthesize(self, chunk_DWT):
         self.dequantize(self,chunk_DWT)
