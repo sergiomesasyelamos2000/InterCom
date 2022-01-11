@@ -6,7 +6,7 @@ import logging
 import math
 import minimal
 from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT
-from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT__verbose as temp_DWT__verbose
+from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT__verbose
 
 
 class Threshold(Temporal_Overlapped_DWT):
