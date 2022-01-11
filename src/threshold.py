@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # PYTHON_ARGCOMPLETE_OK
 
-import numpy as np
-import pywt
 import logging
-import struct
-import zlib
 import math
 import minimal
 from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT
@@ -13,7 +9,7 @@ from stereo_MST_coding_32 import Stereo_MST_Coding_32 as stereo32
 from temporal_overlapped_DWT_coding import Temporal_Overlapped_DWT__verbose as temp_DWT__verbose
 
 
-class threshold(Temporal_Overlapped_DWT):
+class Threshold(Temporal_Overlapped_DWT):
     def __init__(self):
         super().__init__()
         logging.info(__doc__)
@@ -56,26 +52,23 @@ class threshold(Temporal_Overlapped_DWT):
         return super().synthesize(chunk_DWT)
 
     def quantize(self, chunk):
-        variable = 0
+         
         for i in range (len(self.subband)):
-           chunk[variable: self.subband[i]] = (chunk[variable: self.subband[i]] / self.cuant[i]).astype(np.int32)
-           variable += self.subband[i]
+           chunk[0: self.subband[i]] = (chunk[0: self.subband[i]] / self.cuant[i]).astype(np.int32)
         
         return chunk
     
     def dequantize(self, quantized_chunk):
-        
-        variable = 0
         for i in range (len(self.subband)):
-           quantized_chunk[variable: self.subband[i]] = quantized_chunk[variable: self.subband[i]] * self.cuant[i]
-           variable += self.subband[i]
+           quantized_chunk[0: self.subband[i]] = quantized_chunk[0: self.subband[i]] * self.cuant[i]
         return quantized_chunk
         
     
-class threshold__verbose(threshold,temp_DWT__verbose):
+class threshold__verbose(Threshold,Temporal_Overlapped_DWT__verbose):
     pass
+
 try:
-    import argcomplete  
+    import argcomplete  # <tab> completion for argparse.
 except ImportError:
     logging.warning("Unable to import argcomplete (optional)")
 
@@ -89,7 +82,7 @@ if __name__ == "__main__":
     if minimal.args.show_stats or minimal.args.show_samples:
         intercom = threshold__verbose()
     else:
-        intercom = threshold()
+        intercom = Threshold()
     try:
         intercom.run()
     except KeyboardInterrupt:
